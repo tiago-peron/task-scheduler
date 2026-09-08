@@ -6,8 +6,9 @@ Sistema de agendamento de tarefas baseado em microserviços.
 
 ## Serviços
 
-| Serviço      | Descrição                | Porta | Docs                                      |
-|--------------|--------------------------|-------|-------------------------------------------|
+| Serviço | Descrição                 | Porta | Docs                                      |
+|:-------:|---------------------------|:-----:|-------------------------------------------|
+|  User   | Gerenciamento de Usuários | 8081  | [README](services/user-service/README.md) |
 
 ## Stack
 
