@@ -1,0 +1,112 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+
+### VS Code ###
+.vscode/
+
+
+### Eclipse / Buildship (Gradle) ###
+bin/
+
+
+### Gradle ###
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+
+### Maven Wrapper ###
+!.mvn/wrapper/maven-wrapper.properties
+
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
+
+### Keys ###
+*.pem
+!src/test/resources/certs/*.pem
+
+
+### Operating System ###
+**/.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+
+### Temporary Files ###
+*.tmp
+*.bak
+*.swp
+
+
+### JVM Crash Logs ###
+hs_err_pid*.log
+replay_pid*.log
+.attach_pid*
+
+
+### Others ###
+flyway.conf
+
+
+### Data ###
+/uploads/
+
+
+### Logs ###
+*.log
+logs/
+spring.log
+
+
+### Compiled ###
+*.class
+
+
+### Package Files ###
+*.jar
+*.war
+*.ear
+!**/src/**/target/*.jar
+
+
+### Tests ###
+/report/
+/reports/
