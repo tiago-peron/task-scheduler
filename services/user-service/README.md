@@ -38,13 +38,13 @@ com.tiagoperon.userservice
 
 ## Como Rodar Localmente
 
-1. Subir a infraestrutura (Postgres + Redis) via Compose da raiz:
+1. Subir a infraestrutura (Postgres + MongoDB + Redis) via Compose da raiz:
 
    ```bash
    docker compose -f ../../docker-compose.yaml up -d
    ```
 
-2. Garantir que o `.env` da raiz esteja preenchido (ver tabela no README raiz).
+2. Garantir que o `.env` da raiz esteja preenchido com `POSTGRES_*`, `REDIS_*` e `SECRET_KEY` (ver tabela no README raiz).
 
 3. Rodar o serviço:
 
@@ -92,7 +92,7 @@ Base: `/usuario`
 
 Variáveis consumidas por este serviço:
 
-- `DB_HOST`, `DB_PORT_USER`, `DB_DATABASE_USER`, `DB_USERNAME_USER`, `DB_PASSWORD_USER`
+- `POSTGRES_HOST`, `POSTGRES_PORT_USER`, `POSTGRES_DATABASE_USER`, `POSTGRES_USERNAME_USER`, `POSTGRES_PASSWORD_USER`
 - `REDIS_HOST`, `REDIS_PORT_USER`, `REDIS_PASSWORD_USER`
 - `SECRET_KEY` (assinatura JWT)
 - `API_PORT_USER` (porta HTTP — default `8080`)
