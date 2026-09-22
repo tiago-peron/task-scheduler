@@ -16,7 +16,8 @@ task-scheduler/
 ├── .gitattributes
 └── services/
     ├── user-service/        # Microsserviço de usuários (Maven)
-    └── scheduler-service/   # Microsserviço de tarefas (Maven)
+    ├── scheduler-service/   # Microsserviço de tarefas (Maven)
+    └── notification-service/# Microsserviço de envio de e-mails (Maven)
 ```
 
 ## Stack Tecnológico (geral)
@@ -29,6 +30,7 @@ task-scheduler/
 - **Cache**: Redis 8 (Spring Data Redis)
 - **Mensageria HTTP**: Spring Cloud OpenFeign
 - **Mapeamento**: MapStruct (usado no `scheduler-service`)
+- **Envio de e-mail**: Spring Boot Mail + Thymeleaf (usados no `notification-service`)
 - **Documentação de API**: SpringDoc OpenAPI / Swagger UI (apenas no `user-service`)
 - **Containerização**: Docker + Docker Compose
 
@@ -38,6 +40,7 @@ task-scheduler/
 |---|---|---|
 | `user-service` | Cadastro, autenticação e gerenciamento de usuários (com endereços e telefones) | `${API_PORT_USER:8080}` |
 | `scheduler-service` | CRUD de tarefas e listagem por período; consome o `user-service` via OpenFeign para validar o usuário autenticado | `${API_PORT_SCHEDULER:8080}` |
+| `notification-service` | Envio de e-mails de notificação de tarefas, via SMTP (Gmail) com template Thymeleaf | `${API_PORT_NOTIFICATION:8080}` |
 
 ## Pré-requisitos
 
@@ -76,6 +79,10 @@ cd services/user-service
 # terminal 2
 cd services/scheduler-service
 ./mvnw spring-boot:run
+
+# terminal 3 (opcional, se houver envio de e-mail)
+cd services/notification-service
+./mvnw spring-boot:run
 ```
 
 Ou via jar:
@@ -109,6 +116,9 @@ Definidas em `.env` na raiz e consumidas pelos serviços via `spring.config.impo
 | `SECRET_KEY` | Chave base64 usada para assinar os tokens JWT | — |
 | `API_PORT_USER` | Porta HTTP do `user-service` | `8080` |
 | `API_PORT_SCHEDULER` | Porta HTTP do `scheduler-service` | `8080` |
+| `API_PORT_NOTIFICATION` | Porta HTTP do `notification-service` | `8080` |
+| `EMAIL_USERNAME` | Usuário SMTP (Gmail) usado pelo `notification-service` | — |
+| `EMAIL_PASSWORD` | Senha de app SMTP (Gmail) usada pelo `notification-service` | — |
 | `USER_SERVICE_URL` | URL do `user-service` consumida pelo `scheduler-service` (Feign) | `http://localhost:8080` |
 | `VIA_CEP_URL` | URL base da API ViaCEP (consumida pelo `user-service`) | `https://viacep.com.br` |
 
@@ -120,5 +130,6 @@ Definidas em `.env` na raiz e consumidas pelos serviços via `spring.config.impo
 - **Infra compartilhada via Compose raiz**: PostgreSQL, MongoDB e Redis sobem juntos, na network default do Compose, evitando duplicação de containers entre serviços.
 - **Bancos por serviço**: `user-service` usa PostgreSQL (dados relacionais: usuários, endereços, telefones); `scheduler-service` usa MongoDB (tarefas como documentos). Cada container expõe apenas a porta do seu banco para o host.
 - **Comunicação entre serviços via OpenFeign**: o `scheduler-service` valida o usuário autenticado chamando o `user-service` via Feign Client (`UsuarioClient`), com URL configurável em `external-services.user-service.url` (`USER_SERVICE_URL`).
+- **Notificação por e-mail (SMTP)**: o `notification-service` não tem dependência de banco — recebe um `TarefasDTO` e dispara um e-mail via Gmail SMTP (`smtp.gmail.com:587`, STARTTLS) renderizando o template Thymeleaf `templates/notificacao.html`. Credenciais vêm de `EMAIL_USERNAME` / `EMAIL_PASSWORD`.
 - **Config externalizada por `.env` central**: o `application.yaml` de cada serviço importa `optional:file:.env[.properties]`, então um único `.env` na raiz alimenta todos os serviços.
 - **Healthchecks na infra**: Postgres usa `pg_isready`; MongoDB usa `mongosh ping`; Redis autentica via `REDISCLI_AUTH` antes de pingar.
