@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: scheduler-service
+  config:
+    import: optional:file:.env[.properties]
+  mongodb:
+    uri: mongodb://${MONGO_USERNAME_SCHEDULER}:${MONGO_PASSWORD_SCHEDULER}@${MONGO_HOST}:${MONGO_PORT_SCHEDULER}/${MONGO_DATABASE_SCHEDULER}?authSource=admin
+
+server:
+  port: ${API_PORT_SCHEDULER:8080}
+
+external-services:
+  user-service:
+    url: ${USER_SERVICE_URL:https://localhost:8080}
