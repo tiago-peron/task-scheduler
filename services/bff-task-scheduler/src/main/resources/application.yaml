@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: bff-task-scheduler
+  config:
+    import: optional:file:.env[.properties]
+
+server:
+  port: ${API_PORT_BFF:8080}
+  forward-headers-strategy: framework
+
+cron:
+  horario: 0/30 0/1 * * * ?
+
+external-services:
+  notification-service:
+    url: ${NOTIFICATION_SERVICE_URL:https://localhost:8080}
+  scheduler-service:
+    url: ${SCHEDULER_SERVICE_URL:https://localhost:8080}
+  user-service:
+    url: ${USER_SERVICE_URL:https://localhost:8080}
+
+usuario:
+  email: admin@admin.com
+  senha: ${USER_PASSWORD:teste}
