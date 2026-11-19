@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: task-service
+  config:
+    import: optional:file:.env[.properties]
+  mongodb:
+    uri: mongodb://${MONGO_USERNAME_TASK}:${MONGO_PASSWORD_TASK}@${MONGO_HOST}:${MONGO_PORT_TASK}/${MONGO_DATABASE_TASK}?authSource=admin
+
+server:
+  port: ${API_PORT_TASK}
+
+external-services:
+  user-service:
+    url: ${USER_SERVICE_URL}
