@@ -19,7 +19,7 @@ spring:
           writetimeout: 5000
 
 server:
-  port: ${API_PORT_NOTIFICATION:8080}
+  port: ${API_PORT_NOTIFICATION}
 
 send:
   email:

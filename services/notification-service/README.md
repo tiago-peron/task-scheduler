@@ -4,7 +4,7 @@ Microsserviço de envio de e-mails de notificação de tarefas. Recebe um `Taref
 
 ## Stack
 
-- Java 25 + Spring Boot 4.1.1 (Maven)
+- Java 25 + Spring Boot 4.1.2 (Maven)
 - Spring Web MVC
 - Spring Boot Mail (Jakarta Mail)
 - Thymeleaf (template `templates/notificacao.html`)
@@ -69,7 +69,7 @@ Base: `/email`
 
 ## Segurança
 
-Este serviço **não** possui `SecurityConfig`: todos os endpoints estão abertos. É esperado que ele seja chamado apenas pela rede interna / pelo `scheduler-service` (ou via API Gateway), não diretamente pela internet.
+Este serviço **não** possui `SecurityConfig`: todos os endpoints estão abertos. É esperado que ele seja chamado apenas pela rede interna / pelo `task-service` (ou via API Gateway), não diretamente pela internet.
 
 ## Configuração SMTP
 
@@ -97,4 +97,15 @@ Variáveis consumidas por este serviço:
 
 - `EMAIL_USERNAME` (usuário SMTP — Gmail)
 - `EMAIL_PASSWORD` (senha de app SMTP)
-- `API_PORT_NOTIFICATION` (porta HTTP — default `8080`)
+- `API_PORT_NOTIFICATION` (porta HTTP — obrigatória)
+
+## Docker
+
+O `Dockerfile` faz build multi-stage (Maven + `eclipse-temurin:25-jdk-alpine` → runtime `eclipse-temurin:25-jre-alpine` com o jar em camadas e usuário não-root `spring`).
+
+```bash
+docker build -t notification-service:latest .
+docker run --rm -p 8083:8083 --env-file ../../.env notification-service:latest
+```
+
+A porta vem do `ARG SERVER_PORT=8083` do Dockerfile. O healthcheck do container consulta `GET /actuator/health`.
