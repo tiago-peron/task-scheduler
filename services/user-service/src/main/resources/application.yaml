@@ -17,7 +17,7 @@ spring:
     show-sql: false
 
 server:
-  port: ${API_PORT_USER:8080}
+  port: ${API_PORT_USER}
 
 external-services:
   viacep:

@@ -4,7 +4,7 @@ Microsserviço de cadastro, autenticação e gerenciamento de usuários, com end
 
 ## Stack
 
-- Java 25 + Spring Boot 4.1.1 (Maven)
+- Java 25 + Spring Boot 4.1.2 (Maven)
 - Spring Web, Spring Security, Spring Data JPA, Spring Data Redis
 - Spring Cloud OpenFeign (cliente ViaCEP)
 - JWT (jjwt 0.13.0) — autenticação stateless
@@ -59,7 +59,7 @@ com.tiagoperon.userservice
    java -jar target/user-service-0.0.1-SNAPSHOT.jar
    ```
 
-4. Swagger UI: <http://localhost:${API_PORT_USER:8080}/swagger-ui.html>
+4. Swagger UI: <http://localhost:${API_PORT_USER}/swagger-ui.html>
 
 ## Endpoints
 
@@ -82,9 +82,21 @@ Base: `/usuario`
 
 - **Stateless**: `SessionCreationPolicy.STATELESS`
 - **JWT Bearer**: header `Authorization: Bearer <token>`
+- **Login devolve o JWT cru**: `POST /usuario/login` retorna apenas o token (sem o prefixo `"Bearer "`), que deve ser enviado no header como `Authorization: Bearer <token>`
 - **Criptografia de senha**: `BCryptPasswordEncoder`
 - **Rotas públicas**: `POST /usuario`, `POST /usuario/login`, `GET /usuario/endereco/**`, Swagger/OpenAPI (`/v3/api-docs/**`, `/swagger-ui/**`)
 - **Esquema OpenAPI**: `bearerAuth` (HTTP Bearer, JWT)
+
+## Docker
+
+O `Dockerfile` faz build multi-stage (Maven + `eclipse-temurin:25-jdk-alpine` → runtime `eclipse-temurin:25-jre-alpine` com o jar em camadas e usuário não-root `spring`).
+
+```bash
+docker build -t user-service:latest .
+docker run --rm -p 8081:8081 --env-file ../../.env user-service:latest
+```
+
+A porta vem do `ARG SERVER_PORT=8081` do Dockerfile. O healthcheck do container consulta `GET /actuator/health`.
 
 ## Configuração
 
@@ -95,5 +107,5 @@ Variáveis consumidas por este serviço:
 - `POSTGRES_HOST`, `POSTGRES_PORT_USER`, `POSTGRES_DATABASE_USER`, `POSTGRES_USERNAME_USER`, `POSTGRES_PASSWORD_USER`
 - `REDIS_HOST`, `REDIS_PORT_USER`, `REDIS_PASSWORD_USER`
 - `SECRET_KEY` (assinatura JWT)
-- `API_PORT_USER` (porta HTTP — default `8080`)
+- `API_PORT_USER` (porta HTTP — obrigatória)
 - `VIA_CEP_URL` (integração ViaCEP — default `https://viacep.com.br`)

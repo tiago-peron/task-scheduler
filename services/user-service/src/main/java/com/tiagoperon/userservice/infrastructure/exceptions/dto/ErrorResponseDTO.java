@@ -1,6 +1,6 @@
 package com.tiagoperon.userservice.infrastructure.exceptions.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 public class ErrorResponseDTO {
 
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private int status;
     private String error;
     private String message;

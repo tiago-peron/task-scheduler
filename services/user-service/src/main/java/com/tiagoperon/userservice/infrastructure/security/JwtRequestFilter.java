@@ -11,7 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,7 +74,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private String buildError(int status, String mensagem, String path, String error){
         ErrorResponseDTO errorResponseDTO = ErrorResponseDTO.builder()
-                .timestamp(LocalDateTime.now())
+                .timestamp(Instant.now())
                 .message(mensagem)
                 .error(error)
                 .status(status)

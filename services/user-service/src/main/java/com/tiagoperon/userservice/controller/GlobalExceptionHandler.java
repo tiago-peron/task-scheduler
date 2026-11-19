@@ -6,7 +6,7 @@ import com.tiagoperon.userservice.infrastructure.exceptions.ResourceNotFoundExce
 import com.tiagoperon.userservice.infrastructure.exceptions.UnauthorizedException;
 import com.tiagoperon.userservice.infrastructure.exceptions.dto.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
 
     private ErrorResponseDTO buildError(int status, String mensagem, String path, String error) {
         return ErrorResponseDTO.builder()
-                .timestamp(LocalDateTime.now())
+                .timestamp(Instant.now())
                 .message(mensagem)
                 .error(error)
                 .status(status)
