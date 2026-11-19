@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17-trixie
     container_name: user-service-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DATABASE_USER}
@@ -19,13 +19,13 @@ services:
 
   mongodb:
     image: mongo:8
-    container_name: scheduler-service-mongodb
+    container_name: task-service-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME_SCHEDULER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD_SCHEDULER}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE_SCHEDULER}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME_TASK}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD_TASK}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE_TASK}
     ports:
-      - "127.0.0.1:${MONGO_PORT_SCHEDULER}:27017"
+      - "127.0.0.1:${MONGO_PORT_TASK}:27017"
     volumes:
       - mongodb_data:/data/db
     restart: unless-stopped
@@ -36,7 +36,7 @@ services:
       retries: 5
 
   redis:
-    image: redis:8-alpine
+    image: redis:8-trixie
     container_name: user-service-redis
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD_USER}
