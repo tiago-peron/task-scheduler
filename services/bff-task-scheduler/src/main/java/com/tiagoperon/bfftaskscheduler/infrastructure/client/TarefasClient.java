@@ -4,7 +4,7 @@ package com.tiagoperon.bfftaskscheduler.infrastructure.client;
 import com.tiagoperon.bfftaskscheduler.business.dto.in.TarefasDTORequest;
 import com.tiagoperon.bfftaskscheduler.business.dto.out.TarefasDTOResponse;
 import com.tiagoperon.bfftaskscheduler.business.enums.StatusNotificacaoEnum;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "agendador-tarefas", url = "${external-services.scheduler-service.url}")
+@FeignClient(name = "agendador-tarefas", url = "${external-services.task-service.url}", path = "/tarefas")
 public interface TarefasClient {
 
     @PostMapping
@@ -27,8 +27,8 @@ public interface TarefasClient {
 
     @GetMapping("/eventos")
     List<TarefasDTOResponse> buscaListaDeTarefasPorPeriodo(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicial,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFinal,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dataInicial,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dataFinal,
             @RequestHeader(value = "Authorization", required=false) String token);
 
     @GetMapping

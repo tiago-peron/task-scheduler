@@ -4,7 +4,8 @@ package com.tiagoperon.bfftaskscheduler.business;
 import com.tiagoperon.bfftaskscheduler.business.dto.in.LoginRequestDTO;
 import com.tiagoperon.bfftaskscheduler.business.dto.out.TarefasDTOResponse;
 import com.tiagoperon.bfftaskscheduler.business.enums.StatusNotificacaoEnum;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,8 @@ public class CronService {
     public void buscaTarefasProximaHora(){
         String token = login(converterParaRequestDTO());
         log.info("Iniciada a busca de tarefas");
-        LocalDateTime horaAtual = LocalDateTime.now(); //LocalDateTime.now (hora atual) plus
-        LocalDateTime horaFutura = LocalDateTime.now().plusHours(1);
+        Instant horaAtual = Instant.now(); //LocalDateTime.now (hora atual) plus
+        Instant horaFutura = Instant.now().plus(1, ChronoUnit.HOURS);
         //Qualquer tarefa que fique entre hora atual - e a hora futura + 1
         // Se agora é 22h - qualquer tarefa entre 22h e 23h
         // Se agora é 22h - qualquer tarefa entre 23h e 23h05 -- antes

@@ -7,7 +7,6 @@ import com.tiagoperon.bfftaskscheduler.infrastructure.exceptions.ResourceNotFoun
 import com.tiagoperon.bfftaskscheduler.infrastructure.exceptions.UnauthorizedException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;

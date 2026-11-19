@@ -1,10 +1,10 @@
 # bff-task-scheduler
 
-BFF (Backend for Frontend) que agrega os serviços `user-service`, `scheduler-service` e `notification-service` via OpenFeign, expondo uma API única para o front e disparando uma rotina periódica de notificações.
+BFF (Backend for Frontend) que agrega os serviços `user-service`, `task-service` e `notification-service` via OpenFeign, expondo uma API única para o front e disparando uma rotina periódica de notificações.
 
 ## Stack
 
-- Java 25 + Spring Boot 4.1.1 (Maven)
+- Java 25 + Spring Boot 4.1.2 (Maven)
 - Spring Web MVC
 - Spring Cloud OpenFeign (3 Feign Clients com tratamento de erro via `FeignConfig` / `FeignError`)
 - SpringDoc OpenAPI 3.1.1 (Swagger UI)
@@ -58,13 +58,13 @@ com.tiagoperon.bfftaskscheduler
    cd ../user-service && ./mvnw spring-boot:run
 
    # terminal 2
-   cd ../scheduler-service && ./mvnw spring-boot:run
+   cd ../task-service && ./mvnw spring-boot:run
 
    # terminal 3 (opcional, para disparo real de e-mail)
    cd ../notification-service && ./mvnw spring-boot:run
    ```
 
-3. Configurar no `.env` da raiz as URLs dos serviços (`USER_SERVICE_URL`, `SCHEDULER_SERVICE_URL`, `NOTIFICATION_SERVICE_URL`) — já vêm com defaults apontando para as portas do `.env`. Ver tabela no README raiz.
+3. Configurar no `.env` da raiz as URLs dos serviços (`USER_SERVICE_URL`, `TASK_SERVICE_URL`, `NOTIFICATION_SERVICE_URL`) — são obrigatórias, sem valor default no `application.yaml`. Ver tabela no README raiz.
 
 4. Rodar o BFF:
 
@@ -79,7 +79,7 @@ com.tiagoperon.bfftaskscheduler
    java -jar target/bff-task-scheduler-0.0.1-SNAPSHOT.jar
    ```
 
-5. Swagger UI: <http://localhost:${API_PORT_BFF:8080}/swagger-ui.html>
+5. Swagger UI: <http://localhost:${API_PORT_BFF}/swagger-ui.html>
 
 ## Endpoints
 
@@ -109,7 +109,7 @@ Base: `/tarefas`
 | PATCH | `/tarefas?status={status}&id={id}` | bearer* | Altera o status de notificação |
 | DELETE | `/tarefas?id={id}` | bearer* | Remove a tarefa |
 
-> *Os endpoints marcados como `bearer` exigem `Authorization: Bearer <token>`, mas **a validação não é feita no BFF**: o token é repassado via `RequestHeader` para o `user-service` ou `scheduler-service`, que de fato autenticam a chamada.
+> *Os endpoints marcados como `bearer` exigem `Authorization: Bearer <token>`, mas **a validação não é feita no BFF**: o token é repassado via `RequestHeader` para o `user-service` ou `task-service`, que de fato autenticam a chamada.
 
 ## Segurança
 
@@ -121,7 +121,7 @@ Base: `/tarefas`
 
 `cron.horario = 0/30 0/1 * * * ?` — dispara a cada 30 minutos.
 
-O `CronService` consulta o `scheduler-service` por tarefas pendentes no período atual e chama o `notification-service` para disparar os e-mails via SMTP.
+O `CronService` consulta o `task-service` por tarefas pendentes no período atual e chama o `notification-service` para disparar os e-mails via SMTP.
 
 ## Configuração
 
@@ -129,9 +129,20 @@ O `CronService` consulta o `scheduler-service` por tarefas pendentes no período
 
 Variáveis consumidas por este serviço:
 
-- `USER_SERVICE_URL` — URL do `user-service` para os Feign Clients (default `https://localhost:8080`)
-- `SCHEDULER_SERVICE_URL` — URL do `scheduler-service` para os Feign Clients (default `https://localhost:8080`)
-- `NOTIFICATION_SERVICE_URL` — URL do `notification-service` para o Feign Client (default `https://localhost:8080`)
-- `API_PORT_BFF` — porta HTTP do BFF (default `8080`)
+- `USER_SERVICE_URL` — URL do `user-service` para os Feign Clients (obrigatória)
+- `TASK_SERVICE_URL` — URL do `task-service` para os Feign Clients (obrigatória)
+- `NOTIFICATION_SERVICE_URL` — URL do `notification-service` para o Feign Client (obrigatória)
+- `API_PORT_BFF` — porta HTTP do BFF (obrigatória)
 - `SECRET_KEY` — chave base64 usada para assinar os tokens JWT
 - `cron.horario` — expressão cron fixa em `application.yaml` (não vem de env var)
+
+## Docker
+
+O `Dockerfile` faz build multi-stage (Maven + `eclipse-temurin:25-jdk-alpine` → runtime `eclipse-temurin:25-jre-alpine` com o jar em camadas e usuário não-root `spring`).
+
+```bash
+docker build -t bff-task-scheduler:latest .
+docker run --rm -p 8080:8080 --env-file ../../.env bff-task-scheduler:latest
+```
+
+A porta vem do `ARG SERVER_PORT=8080` do Dockerfile. O healthcheck do container consulta `GET /actuator/health`.

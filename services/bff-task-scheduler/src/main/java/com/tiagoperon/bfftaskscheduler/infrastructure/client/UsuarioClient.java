@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "usuario", url = "${external-services.user-service.url}")
+@FeignClient(name = "usuario", url = "${external-services.user-service.url}", path = "/usuario")
 public interface UsuarioClient {
 
     @GetMapping

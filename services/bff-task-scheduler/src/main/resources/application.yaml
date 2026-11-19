@@ -5,7 +5,7 @@ spring:
     import: optional:file:.env[.properties]
 
 server:
-  port: ${API_PORT_BFF:8080}
+  port: ${API_PORT_BFF}
   forward-headers-strategy: framework
 
 cron:
@@ -13,11 +13,11 @@ cron:
 
 external-services:
   notification-service:
-    url: ${NOTIFICATION_SERVICE_URL:https://localhost:8080}
-  scheduler-service:
-    url: ${SCHEDULER_SERVICE_URL:https://localhost:8080}
+    url: ${NOTIFICATION_SERVICE_URL}
+  task-service:
+    url: ${TASK_SERVICE_URL}
   user-service:
-    url: ${USER_SERVICE_URL:https://localhost:8080}
+    url: ${USER_SERVICE_URL}
 
 usuario:
   email: admin@admin.com

@@ -5,7 +5,7 @@ import com.tiagoperon.bfftaskscheduler.business.dto.in.TarefasDTORequest;
 import com.tiagoperon.bfftaskscheduler.business.dto.out.TarefasDTOResponse;
 import com.tiagoperon.bfftaskscheduler.business.enums.StatusNotificacaoEnum;
 import com.tiagoperon.bfftaskscheduler.infrastructure.client.TarefasClient;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,8 @@ public class TarefasService {
         return tarefasClient.gravarTarefas(dto, token);
     }
 
-    public List<TarefasDTOResponse> buscaTarefasAgendadasPorPeriodo(LocalDateTime dataInicial,
-                                                                    LocalDateTime dataFinal,
+    public List<TarefasDTOResponse> buscaTarefasAgendadasPorPeriodo(Instant dataInicial,
+                                                                    Instant dataFinal,
                                                                     String token) {
 
         return tarefasClient.buscaListaDeTarefasPorPeriodo(dataInicial, dataFinal, token);
